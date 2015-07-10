@@ -1,0 +1,68 @@
+{% extends "AdminBundle:Base:layout.html.twig" %}
+{% form_theme form 'AdminBundle:Form:fields.html.twig' %}
+
+{% block section %}postcomments{% endblock %}
+
+{% block content %}
+    <!-- BEGIN PAGE CONTAINER-->
+    <div class="container-fluid">
+        <!-- BEGIN PAGE HEADER-->
+        <div class="row-fluid">
+            <div class="span12">
+                <!-- BEGIN PAGE TITLE & BREADCRUMB-->
+                <h3 class="page-title">
+                     {{ "comment.new" | trans }}
+                </h3>
+                <ul class="breadcrumb">
+                    <li><a href="{{ path('core_admin_default_index') }}"> <i class="ion-home"></i>  {{ "home" | trans }}</a></li>
+                    <li><a href="javascript:">{{ "post.plural" | trans }}</a></li>
+                    <li><a href="{{ path('core_blog_comment_index') }}">{{ "comment.singular" | trans }}</a></li>
+                    <li><a href="{{ path('core_blog_comment_new') }}">{{ "new.singular" | trans }}</a></li>
+                </ul>
+                <!-- END PAGE TITLE & BREADCRUMB-->
+            </div>
+        </div>
+        <!-- END PAGE HEADER-->
+
+        <!-- BEGIN PAGE CONTENT-->
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="tabbable tabbable-custom boxless custom-border">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#info_tab" data-toggle="tab">{{ "information" | trans }}</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="info_tab">
+                            <div class="portlet box custom">
+                                <div class="portlet-body form">
+                                    <!-- BEGIN FORM-->
+                                    <form action="{{ path('core_blog_comment_create') }}" method="post" {{ form_enctype(form) }} class="form-horizontal form-row-seperated">
+                                        {{ include('BlogBundle:Comment:_form.html.twig', { form: form }) }}
+
+                                        <div class="form-actions">
+                                            <button type="submit" class="btn blue"><i class="ion-checkmark"></i> {{ "save" | trans }}</button>
+                                            <a href="{{ path('core_blog_comment_index') }}" class="btn">{{ "cancel.singular" | trans }}</a>
+                                        </div>
+                                    </form>
+                                    <!-- END FORM-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END PAGE CONTENT-->
+    </div>
+    <!-- END PAGE CONTAINER-->
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+        jQuery(document).ready(function() {
+            //App.init();
+        });
+    </script>
+{% endblock %}

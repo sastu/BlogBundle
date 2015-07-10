@@ -1,0 +1,108 @@
+{% extends "AdminBundle:Base:layout.html.twig" %}
+
+{% block section %}postcomments{% endblock %}
+
+{% block content %}
+    <!-- BEGIN PAGE CONTAINER-->
+    <div class="container-fluid">
+        <!-- BEGIN PAGE HEADER-->
+        <div class="row-fluid">
+            <div class="span12">
+                <!-- BEGIN PAGE TITLE & BREADCRUMB-->
+                <h3 class="page-title">
+                    {{ "comment.singular" | trans  }}
+                </h3>
+                <ul class="breadcrumb">
+                    <li><a href="{{ path('core_admin_default_index') }}"> <i class="ion-home"></i>  {{ "home" | trans }}</a></li>
+                    <li><a href="javascript:">{{ "post.plural" | trans }}</a></li>
+                    <li><a href="{{ path('core_blog_comment_index') }}">{{ "comment.singular" | trans }}</a></li>
+                    <li><a href="{{ path('core_blog_comment_show', { id: entity.id }) }}">{{ entity.id }}</a></li>
+                </ul>
+                <!-- END PAGE TITLE & BREADCRUMB-->
+            </div>
+        </div>
+        <!-- END PAGE HEADER-->
+
+        <!-- BEGIN PAGE CONTENT-->
+        <div class="row-fluid profile">
+            <div class="span12">
+                <div class="tabbable tabbable-custom boxless custom-border">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#info_tab" data-toggle="tab">{{ "information" | trans }}</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="info_tab">
+                            <div class="portlet box custom">
+                                <div class="portlet-body profile">
+                                    <table class="table">
+                                        <tbody>
+                                        <tr>
+                                            <td>{{ "comment.singular" | trans }}</td>
+                                            <td>{{ entity.comment }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>{{ "comment.active" | trans }}</td>
+                                            <td>
+                                                 {% if entity.isActive %}
+                                                    <span class="label label-success">{{ "yes" | trans }}</span>
+                                                {% else %}
+                                                    <span class="label label-important">{{ "no" | trans }}</span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>{{ "comment.actor" | trans }}</td>
+                                            <td>
+                                                 {{ entity.actor.fullName }}
+                                                
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>{{ "project.singular" | trans }}</td>
+                                            <td>
+                                                 {{ entity.post.project.name }}
+                                                
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="form-actions">
+                                    <a href="{{ path('core_blog_comment_edit', { id: entity.id }) }}" class="btn purple"><i class="ion-compose"></i> {{ "edit.singular" | trans }}</a>
+                                    <button type="submit" class="btn red pull-right" id="delete-btn">{{ "delete" | trans }}</button>
+                                </div>
+                            </div>
+
+                            <form id="delete-entity" action="{{ path('core_blog_comment_delete', { id: entity.id }) }}" method="post">
+                                <input type="hidden" name="_method" value="DELETE" />
+                                {{ form_widget(delete_form) }}
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!--END TABS-->
+            </div>
+        </div>
+        <!-- END PAGE CONTENT-->
+    </div>
+    <!-- END PAGE CONTAINER-->
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+        jQuery(document).ready(function() {
+            $('#delete-btn').on('click', function(e) {
+                e.preventDefault();
+
+                if (confirm('{{ "are.you.sure" | trans }}')) {
+                    $('#delete-entity').submit();
+                }
+            });
+
+            //App.init();
+        });
+    </script>
+{% endblock %}

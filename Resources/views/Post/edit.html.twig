@@ -1,0 +1,160 @@
+{% extends "AdminBundle:Base:layout.html.twig" %}
+{% form_theme edit_form 'AdminBundle:Form:fields.html.twig' %}
+
+{% block section %}posts{% endblock %}
+
+{% block content %}
+<!-- BEGIN PAGE CONTAINER-->
+    <div class="container-fluid">
+        <!-- BEGIN PAGE HEADER-->
+        <div class="row-fluid">
+            <div class="span12">
+                <!-- BEGIN PAGE TITLE & BREADCRUMB-->
+                <h3 class="page-title">
+                    {{ "edit.singular" | trans }} {{ entity.title }}
+                </h3>
+                <ul class="breadcrumb">
+                    <li><a href="{{ path('core_admin_default_index') }}"> <i class="ion-home"></i>  {{ "home" | trans }}</a></li>
+                    <li><a href="javascript:">{{ "blog.singular" | trans }}</a></li>
+                    <li><a href="{{ path('core_blog_post_index') }}">{{ "post.plural" | trans }}</a></li>
+                    <li><a href="{{ path('core_blog_post_show', { id: entity.id }) }}">{{ entity.title }}</a></li>
+                    <li><a href="{{ path('core_blog_post_edit', { id: entity.id }) }}">{{ "edit.singular" | trans }} </a></li>
+                </ul>
+                <!-- END PAGE TITLE & BREADCRUMB-->
+            </div>
+        </div>
+        <!-- END PAGE HEADER-->
+
+        <!-- BEGIN PAGE CONTENT-->
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="tabbable tabbable-custom boxless custom-border">
+                    <ul class="nav nav-tabs">
+                        <li class="{{ not app.request.get('images') ? 'active' }}">
+                            <a href="#info_tab" data-toggle="tab">{{ "information" | trans }}</a>
+                        </li>
+                        <li class="{{ app.request.get('images') ? 'active' }}"><a href="#images_tab" data-toggle="tab">{{ "image.plural" | trans }}</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane {{ not app.request.get('images')  ? 'active' }}" id="info_tab">
+                            <div class="portlet box custom">
+                                <div class="portlet-body form">
+                                    <!-- BEGIN FORM-->
+                                        {% include 'BlogBundle:Post:_form.html.twig' with {'form': edit_form} %}
+
+                                        <div class="form-actions">
+                                            <button onclick="document.getElementById('core_bundle_blogbundle_post').submit();" type="submit" class="btn blue"><i class="ion-checkmark"></i> {{ "save" | trans }}</button>
+                                            <a href="{{ path('core_blog_post_show', { id: entity.id }) }}" class="btn">{{ "cancel.singular" | trans }}</a>
+                                            
+                                            <form class="pull-right" id="delete-entity" action="{{ path('core_blog_post_delete', { id: entity.id }) }}" method="post">
+                                                <input type="hidden" name="_method" value="DELETE" />
+                                                {{ form_widget(delete_form) }}
+                                            </form>
+                                        </div>
+                                    <!-- END FORM-->
+                                </div>
+                            </div>
+
+                            
+                        </div>
+                  
+                        <div class="tab-pane {{ app.request.get('images') ? 'active' }}" id="images_tab">
+                            <div class="portlet box custom">
+                                <div class="portlet-body form">
+                                    {{ include('BlogBundle:Post:_jquery_file_upload.html.twig', { form: edit_form, entity: entity }) }}
+
+                                    <div class="form-actions">
+                                        <a href="{#{ path('core_core_project_show', { id: entity.id, images: 1 }) }#}" class="btn">{{ "back" | trans }}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <form id="delete-entity" action="{{ path('core_blog_post_delete', { id: entity.id }) }}" method="post">
+                            <input type="hidden" name="_method" value="DELETE" />
+                            {{ form_widget(delete_form) }}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END PAGE CONTENT-->
+    </div>
+    <!-- END PAGE CONTAINER-->
+
+{% endblock %}
+
+
+
+
+{% block stylesheets %}
+    {{ parent() }}      
+    <link href="{{ asset('bundles/admin/js/plugins/sumoselect/sumoselect.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('bundles/admin/css/datepicker/datepicker3.css') }}" rel="stylesheet" type="text/css" />
+{% endblock %}
+
+
+
+
+{% block javascripts %}
+    {{ parent() }}
+
+    
+    {% javascripts 
+        'http://blueimp.github.io/JavaScript-Templates/js/tmpl.min.js'
+        'http://blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js'
+        'http://blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js'
+        'http://netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js'
+        'http://blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js'
+        'bundles/admin/js/plugins/jquery-file-upload-9.8.0/js/jquery.iframe-transport.js'
+        'bundles/admin/js/plugins/jquery-file-upload-9.8.0/js/jquery.fileupload.js'
+        'bundles/admin/js/plugins/jquery-file-upload-9.8.0/js/jquery.fileupload-process.js'
+        'bundles/admin/js/plugins/jquery-file-upload-9.8.0/js/jquery.fileupload-image.js'
+        'bundles/admin/js/plugins/jquery-file-upload-9.8.0/js/jquery.fileupload-audio.js'
+        'bundles/admin/js/plugins/jquery-file-upload-9.8.0/js/jquery.fileupload-validate.js'
+        'bundles/admin/js/plugins/jquery-file-upload-9.8.0/js/jquery.fileupload-ui.js'
+        'bundles/admin/js/plugins/jquery-file-upload-9.8.0/js/main.js'
+        'bundles/admin/js/plugins/datepicker/bootstrap-datepicker.js'
+        'bundles/admin/js/plugins/datepicker/locales/bootstrap-datepicker.es.js'
+        'bundles/admin/js/plugins/ckeditor/ckeditor.js'
+        'bundles/admin/js/plugins/ckeditor/adapters/jquery.js'
+        'bundles/admin/js/plugins/sumoselect/jquery.sumoselect.min.js'
+
+
+         %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <!-- The XDomainRequest Transport is included for cross-domain file deletion for IE 8 and IE 9 -->
+    <!--[if (gte IE 8)&(lt IE 10)]>
+    <script src="bundles/admin/js/plugins/jquery-file-upload-9.8.0/js/cors/jquery.xdr-transport.js"></script>
+    <![endif]-->
+
+    <script>
+         var CKEDITOR_BASEPATH = "{{ asset('bundles/admin/js/plugins/ckeditor/') }}";
+        
+        jQuery(document).ready(function() {
+            
+            
+            $("textarea").wysihtml5();
+            $('#delete-btn').on('click', function(e) {
+                e.preventDefault();
+
+                if (confirm('{{ "are.you.sure" | trans }}')) {
+                    $('#delete-entity').submit();
+                }
+            });
+
+            $('#core_bundle_blogbundle_post_categories').SumoSelect();
+            
+            $('#core_bundle_blogbundle_post_published').datepicker(
+                {
+                    multidate: false,
+                    format: 'dd/mm/yyyy',
+                    language: 'es',
+                    weekStart: 1
+                }
+            );
+        });
+    </script>
+{% endblock %}

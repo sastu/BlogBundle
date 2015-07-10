@@ -1,0 +1,90 @@
+{% extends core['extended_layout'] ? core['extended_layout'] : 'CoreBundle:Base:base.layout.html.twig' %}
+
+{% block content %}
+    <div class="col-md-8">
+        <div class="row post-list">
+        {% for post in posts %}
+                <div class="{% if loop.index == 1 %}col-md-12{% else %}col-md-6{% endif %}">
+                    <article>
+                        <div class="post-content">
+                            {% if post.images|length > 0 %}
+                            {% set path = '/uploads/images/posts/'~post.id~'/'~post.images.first.path %}
+                            {% else %}
+                                {% set path = '/bundles/admin/img/default-no-image.png' %}
+                            {% endif %}
+                            <h3><a  href="{{path("core_blog_blog_show", { slug: post.slug})}}">{{ post.title }}</a></h3>
+                            <div class="date">{{ "post.date" | trans }} {{ post.createdAt | date ('d')}}  {{ "post.of" | trans }} {{ post.createdAt | date ('F') | trans }} {{ "post.of" | trans }} {{ post.createdAt | date ('Y')}} </div>
+                            <img style="float: left" width="{% if loop.index == 1 %}245px{% else %}150px{% endif %}" src="{{ path }}" />
+
+                            {% if loop.index == 1 %}
+                                 <p>{{ post.description|striptags|truncate(800) }}</p>
+                            {% else %}
+                                 <p>{{ post.description|striptags|truncate(500) }}</p>
+                            {% endif %}
+                            <div>
+                                <div class="more">
+                                    <a  href="{{path("core_blog_blog_show", { slug: post.slug})}}" class="pull-right btn">Continuar leyendo <span class="meta-nav">→</span></a>
+                                </div>
+                                <div class="tags">
+                                    {% for category in post.categories %}
+                                        <a href="{{ path('core_blog_blog_tag', {'tag': category.slug }) }}"><div class="label large label-primary">#{{ category.name }} ({{ category.posts | length }})</div></a>
+                                 {% endfor %}     
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="post-footer">
+                            <div >¡Compartelo! </div>
+                            <div data="{{core.server_base_url~path("core_blog_blog_show", { slug: post.slug})}}" class="share-content {% if loop.index != 1 %}pull-right{% endif %}" style="display: inline-block;">
+                                 {{shareUrl(path("core_blog_blog_show", { slug: post.slug}))}}  
+                            </div>
+                        </div>
+                        
+                    </article>
+                </div>
+            
+        {% endfor %}
+         </div>
+    </div>
+    <div class="col-md-4 post-sidebar">
+        {% include 'BlogBundle:Blog:sidebar.html.twig'%}
+    </div>
+    
+    
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $('.list > li a').click(function() {
+            $(this).parent().find('ul').eq(0).toggle();
+
+            if ($('#'+$(this).attr('id')+ " span.active").css('display') == 'inline-block'){
+                $('#'+$(this).attr('id')+ " span.active").css('display', 'none');
+                $('#'+$(this).attr('id')+ " span.pasive").css('display','inline-block');
+            }else{
+                $('#'+$(this).attr('id')+ " span.pasive").css('display', 'none');
+                $('#'+$(this).attr('id')+ " span.active").css('display','inline-block');
+            }
+        });
+        
+        $('.share-content').each(function( index ) {
+            var dir = $( this ).attr('data');
+            if(dir != ''){
+                //var url = dir.replace("http://", "");
+                var self = $(this);
+                $.ajax({
+                    type: 'GET',
+                    url: "/blog/share-counter?url="+dir
+                    //data: {'url': url}
+                }).done(function(result) {
+                    //console.log(result);
+                    //console.log(self.find('.tweet-counter>span.share-container-counter').html());
+                    self.find('.tweet-counter span.share-container-counter').text(result.tweet);
+                    self.find('.facebook-counter span.share-container-counter').text(result.facebook);
+                    self.find('.google-counter span.share-container-counter').text(result.google);
+                    self.find('.linked-counter span.share-container-counter').text(result.linkedin);
+                });
+            }
+          });
+    </script>
+{% endblock %}

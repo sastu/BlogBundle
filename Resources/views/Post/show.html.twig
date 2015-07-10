@@ -1,0 +1,125 @@
+{#% extends extended_layout_admin ? extended_layout_admin : 'AdminBundle:Base:layout.html.twig' %#}
+{% extends "AdminBundle:Base:layout.html.twig" %}
+
+{% block section %}posts{% endblock %}
+
+{% block content %}
+    <!-- BEGIN PAGE CONTAINER-->
+    <div class="container-fluid">
+        <!-- BEGIN PAGE HEADER-->
+        <div class="row-fluid">
+            <div class="span12">
+                <!-- BEGIN PAGE TITLE & BREADCRUMB-->
+                <h3 class="page-title">
+                    {{ entity.title }}
+                </h3>
+                <ul class="breadcrumb">
+                    <li><a href="{{ path('core_admin_default_index') }}"> <i class="ion-home"></i>  {{ "home" | trans }}</a></li>
+                    <li><a href="javascript:">{{ "catalogue" | trans }}</a></li>
+                    <li><a href="{{ path('core_blog_post_index') }}">{{ "product.plural" | trans }}</a></li>
+                    <li><a href="{{ path('core_blog_post_show', { id: entity.id }) }}">{{ entity.title }}</a></li>
+                </ul>
+                <!-- END PAGE TITLE & BREADCRUMB-->
+            </div>
+        </div>
+        <!-- END PAGE HEADER-->
+
+        <!-- BEGIN PAGE CONTENT-->
+        <div class="row-fluid profile">
+            <div class="span12">
+                <div class="tabbable tabbable-custom boxless custom-border">
+                    <ul class="nav nav-tabs">
+                        <li class="{{ not app.request.get('images') ? 'active' }}">
+                            <a href="#info_tab" data-toggle="tab">{{ "information" | trans }}</a>
+                        </li>
+                        <li class="{{ app.request.get('images') ? 'active' }}">
+                            <a href="#images_tab" data-toggle="tab">{{ "image.plural" | trans }}</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane {{ not app.request.get('images') ? 'active' }}" id="info_tab">
+                            <div class="portlet box custom">
+                                <div class="portlet-body profile">
+                                      <table class="table">
+                                        <tbody>
+                                            <tr>
+                                                <td>Id</td>
+                                                <td>{{ entity.id }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>{{ "post.title" | trans }}</td>
+                                                <td>{{ entity.title }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>{{ "post.description" | trans }}</td>
+                                                <td>{{ entity.description | raw}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>{{ "post.slug" | trans }}</td>
+                                                <td>{{ entity.slug }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>{{ "post.categories" | trans }}</td>
+                                                <td>
+                                                    {% for category in entity.categories %}
+                                                        <li>{{ category.name }}</li>
+                                                    {% endfor  %}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>{{ "post.createdAt" | trans }}</td>
+                                                <td>{{ entity.createdAt | date ('d/m/Y H:i:s') }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>{{ "post.updatedAt" | trans }}</td>
+                                                <td>{{ entity.updatedAt | date ('d/m/Y H:i:s')}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>{{ "post.published" | trans }}</td>
+                                                <td>{{ entity.published | date ('d/m/Y H:i:s')}}</td>
+                                            </tr>
+                                            
+                                        </tbody>
+                                    </table>
+                                </div>    
+                                <div class="form-actions">
+                                    <a href="{{ path('core_blog_post_edit', { id: entity.id }) }}" class="btn blue"><i class="ion-compose"></i> {{ "edit.singular" | trans }}</a>
+                                    <form id="delete-entity" class="pull-right" action="{{ path('core_blog_post_delete', { id: entity.id }) }}" method="post">
+                                        <input type="hidden" name="_method" value="DELETE" />
+                                        {{ form_widget(delete_form.submit, {'attr': {'class': 'btn red pull-right' } } ) }}
+                                        {{ form(delete_form) }}
+                                    </form>
+                                </div>
+                            </div>
+
+                            
+                        </div>
+                       
+                        <div class="tab-pane {{ app.request.get('images') ? 'active' }}" id="images_tab">
+                            <div class="portlet box custom">
+                                <div class="portlet-body">
+                                    <div class="show-entity-images">
+                                        {% for image in entity.images %}
+                                            <img src="{{ asset('uploads/images/posts/' ~ entity.id ~ '/thumbnail/' ~ image.path) }}" alt="{{ "image.of.entity" | trans({ '%entity%': entity.title }) }}" />
+                                        {% else %}
+                                            <img src="{{ asset('bundles/admin/img/default-no-image.png') }}" />
+                                        {% endfor %}
+                                    </div>
+                                </div>
+
+                                <div class="form-actions">
+                                    <a href="{{ path('core_blog_post_edit', { id: entity.id, images: 1 }) }}" class="btn purple"><i class="icon-camera"></i> {{ "image.manage" | trans }}</a>
+                                </div>
+                            </div>
+                        </div>
+                       
+                    </div>
+                </div>
+                <!--END TABS-->
+            </div>
+        </div>
+        <!-- END PAGE CONTENT-->
+    </div>
+    <!-- END PAGE CONTAINER-->
+{% endblock %}
+    

@@ -1,0 +1,92 @@
+{#% extends extended_layout_admin ? extended_layout_admin : 'AdminBundle:Base:layout.html.twig' %#}
+{% extends "AdminBundle:Base:layout.html.twig" %}
+
+{% block section %}posts{% endblock %}
+
+{% block content %}
+    <!-- BEGIN PAGE CONTAINER-->
+    <div class="container-fluid">
+        <!-- BEGIN PAGE HEADER-->
+        <div class="row-fluid">
+            <div class="span12">
+                <!-- BEGIN PAGE TITLE & BREADCRUMB-->
+                <h3 class="page-title">
+                    {{ "news.plural" | trans }}
+                </h3>
+                <ul class="breadcrumb">
+                    <li><a href="{{ path('core_admin_default_index') }}"> <i class="ion-home"></i>  {{ "home" | trans }}</a></li>
+                    <li><a href="javascript:">{{ "news.plural" | trans }}</a></li>
+                    <li><a href="{{ path('core_blog_post_index') }}">{{ "post.plural" | trans }}</a></li>
+                </ul>
+                <!-- END PAGE TITLE & BREADCRUMB-->
+            </div>
+        </div>
+        <!-- END PAGE HEADER-->
+
+        <!-- BEGIN PAGE CONTENT-->
+        <div class="row-fluid">
+            <div class="span12">
+                <!-- TABLE PORTLET-->
+                <div class="portlet-body">
+                    
+                    <div class="clearfix">
+                        <div class="btn-group">
+                            <a href="{{ path('core_blog_post_new') }}" class="btn green">
+                                {{ "add.new" | trans }} <i class="ion-plus"></i>
+                            </a>
+                        </div>
+                    </div>
+                            
+                    <table class="table table-striped table-bordered table-hover" id="posts-table">
+                        <thead>
+                        <tr>
+                            <th style="width:70px;" class="hidden-480">ID</th>
+                            <th class="hidden-480">{{ "post.title" | trans }}</th>
+                          
+                            <th style="width:70px;"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+         
+                </div>
+                <!-- END TABLE PORTLET-->
+            </div>
+        </div>
+        <!-- END PAGE CONTENT-->
+    </div>
+           
+    <!-- END PAGE CONTAINER-->
+{% endblock %}
+
+    
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+            var table_columns = [
+                { "mData": "id" },
+                {
+                    "mData": function (source) {
+                        return '<a href="' + source.id + '">' + source.title + '</a>';
+                    }
+                },
+                {
+                    "mData": function(source) {
+                        var html = '<a class="btn mini blue" href="' + source.id + '/edit" data-toggle="tooltip" title="" data-original-title="Editar" ><i class="fa fa-edit"></i> Editar </a>';
+                        return  html;
+                    }
+                }
+            ];
+
+            jQuery(document).ready(function() {
+
+                TableManaged.init(
+                    '#posts-table',
+                    '{{ url('core_blog_post_listjson') }}',
+                    [],
+                    table_columns,
+                    '{{ url('core_admin_default_getdatatablesi18n', { language: app.request.locale }) }}');
+            });
+    </script>
+{% endblock %}

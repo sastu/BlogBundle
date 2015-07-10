@@ -1,0 +1,20 @@
+<ul class="list">
+{% for key, value in history%}
+    <li><a id="{{key}}" class="year"> <span class="pasive">►</span> <span class="active" >▼</span>  {{key}} ({{ countArrayValues(history[key])}})</a>
+        <ul>
+        {% for ke, val in value%}
+            <li><a class="month" id="{{key}}-{{value[ke][0]['month']}}"> <span class="pasive">►</span> <span class="active">▼</span> {{ke | trans }} ({{value[ke]|length}})</a>
+                <ul>
+                {% for k, v in val%}
+                    <li>
+                        <a class="blog-history-title" id="" href="{{ path('core_blog_blog_show', {'slug': v.slug } )}}">{{v.title}}</a>
+                    </li>
+                {%endfor%}
+                </ul>
+            </li>
+        {%endfor%}
+        </ul>
+    </li>
+{%endfor%}
+</ul>
+

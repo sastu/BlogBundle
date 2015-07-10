@@ -1,0 +1,73 @@
+{% extends core['extended_layout'] ? core['extended_layout'] : 'CoreBundle:Base:base.layout.html.twig' %}
+
+{% block content_body %}          
+    <div class="col-md-8">
+        <div class="row post-list">
+            <div class="col-md-12 title-section" >
+                <span class="dot">.</span> Resultados de la busqueda "{{ search }}" <i>({{ posts | length }} coincidencias)</i>
+            </div>
+            <div class="col-md-12 post-content" >
+                <h3>Blog</h3>
+                <ul>
+                    {% for post in posts %}
+                        <div class="row container-search-item">
+                           {% if post.images|length > 0 %}
+                                {% set path = '/uploads/images/posts/'~post.id~'/'~post.images.first.path %}
+                            {% else %}
+                                {% set path = '/bundles/front/images/default-product-image.png' %}
+                            {% endif %}
+                            <div class="col-md-1 col-xs-4">{% if path is defined %}<img width="50px" src="{{ path }}" />{% endif %}</div>
+                            <div class="col-md-11">
+                                <a href="{{ path('core_blog_blog_show', {'slug': post.slug }) }}">
+                                    <b>{{ post.title | search_wrap(search)}}</b><br>
+                                    {{ post.description  | striptags | truncate(190) | search_wrap(search) }}
+                                </a>
+                            </div> 
+                        </div>
+                    {% else %}
+                        No hay publicaciones que coincidan con tu busqueda.
+                    {% endfor %}
+                </ul>
+
+                <h3>Tags</h3>
+                <ul>
+                    {% for tag in tags %}
+                        <div class="row container-search-item">
+                            <div class="col-md-12">
+                                <a href="#">
+                                    <b>XXX</b> <i>(subcategoria)</i>
+                                </a><br>
+                            </div>
+                            <div></div>
+                        </div>
+                    {% else %}
+                        No hay tags que coincidan con tu busqueda.
+                    {% endfor %}
+                </ul>
+            </div>
+         </div>
+    </div>
+    <div class="col-md-4 post-sidebar">
+        {% include 'BlogBundle:Blog:sidebar.html.twig'%}
+    </div>
+
+
+
+
+{% endblock %}   
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $('.list > li a').click(function() {
+            $(this).parent().find('ul').eq(0).toggle();
+
+            if ($('#'+$(this).attr('id')+ " span.active").css('display') == 'inline-block'){
+                $('#'+$(this).attr('id')+ " span.active").css('display', 'none');
+                $('#'+$(this).attr('id')+ " span.pasive").css('display','inline-block');
+            }else{
+                $('#'+$(this).attr('id')+ " span.pasive").css('display', 'none');
+                $('#'+$(this).attr('id')+ " span.active").css('display','inline-block');
+            }
+        });
+    </script>
+{% endblock %}

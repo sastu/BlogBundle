@@ -1,0 +1,20 @@
+{{ form_start(form) }}
+          
+{{ form_row(form.title, {'attr' : { 'class' : 'm-wrap large' } }) }}
+{{ form_row(form.categories, {'attr' : { 'class' : 'm-wrap large' } }) }}
+<div>
+  
+    <div class="admin-label-ckeditor">{{ form_label(form.description) }}</div>
+    {{ form_widget(form.description, {'attr' : { 'style' : 'width:100%;height:200px' } }) }}
+</div>
+
+{{ form_row(form.slug, {'attr' : { 'class' : 'm-wrap large' } }) }}
+{{ form_row(form.published, {'attr' : { 'class' : 'm-wrap large' } }) }}
+             
+
+
+{{ form_end(form) }}
+ 
+              
+
+

@@ -1,0 +1,103 @@
+{% extends "AdminBundle:Base:layout.html.twig" %}
+{% form_theme form 'AdminBundle:Form:fields.html.twig' %}
+
+{% block section %}posts{% endblock %}
+
+{% block content %}
+    <!-- BEGIN PAGE CONTAINER-->
+    <div class="container-fluid">
+        <!-- BEGIN PAGE HEADER-->
+        <div class="row-fluid">
+            <div class="span12">
+                <!-- BEGIN PAGE TITLE & BREADCRUMB-->
+                <h3 class="page-title">
+                    {{ "news.plural" | trans }}
+                </h3>
+                <ul class="breadcrumb">
+                    <li><a href="{{ path('core_admin_default_index') }}"> <i class="ion-home"></i>  {{ "home" | trans }}</a></li>
+                    <li><a href="javascript:">{{ "news.plural" | trans }}</a></li>
+                    <li><a href="{{ path('core_blog_post_index') }}">{{ "post.plural" | trans }}</a></li>
+                    <li><a href="{{ path('core_blog_post_new') }}">{{ "post.new" | trans }}</a></li>
+                </ul>
+                <!-- END PAGE TITLE & BREADCRUMB-->
+            </div>
+        </div>
+        <!-- END PAGE HEADER-->
+
+        
+        <!-- BEGIN PAGE CONTENT-->
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="tabbable tabbable-custom boxless custom-border">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#info_tab" data-toggle="tab">{{ "information" | trans }}</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="info_tab">
+                            <div class="portlet box custom">
+                                <div class="portlet-body form">
+                                    <!-- BEGIN FORM-->
+                                    {% include 'BlogBundle:Post:_form.html.twig' %}
+                                     
+                                    <div class="form-actions"> 
+                                        <button onclick="document.getElementById('core_bundle_blogbundle_post').submit();" type="submit" class="btn blue"><i class="ion-checkmark"></i> {{ "save" | trans }}</button>
+                                        <a href="{{ path('core_blog_post_index') }}" class="btn">{{ "cancel.singular" | trans }}</a>
+                                        {{ form(form) }}
+                                    </div>
+                                    <!-- END FORM-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END PAGE CONTENT-->
+       
+    </div>
+     
+    <!-- END PAGE CONTAINER-->
+{% endblock %}
+
+
+{% block stylesheets %}
+    {{ parent() }}      
+    <link href="{{ asset('bundles/admin/js/plugins/sumoselect/sumoselect.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('bundles/admin/css/datepicker/datepicker3.css') }}" rel="stylesheet" type="text/css" />
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+
+    <script src="{{ asset('bundles/admin/js/plugins/datepicker/bootstrap-datepicker.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/admin/js/plugins/datepicker/locales/bootstrap-datepicker.es.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/admin/js/plugins/ckeditor/ckeditor.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/admin/js/plugins/ckeditor/adapters/jquery.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/admin/js/plugins/sumoselect/jquery.sumoselect.min.js') }}" type="text/javascript"></script>
+
+    <script>
+        var CKEDITOR_BASEPATH = "{{ asset('bundles/admin/js/plugins/ckeditor/') }}";
+        
+        $(document).ready(function() {
+            
+            $("textarea").wysihtml5();
+            $('#core_bundle_blogbundle_post_categories').SumoSelect();
+             
+            $('#core_bundle_blogbundle_post_published').datepicker(
+                {
+                    multidate: false,
+                    format: 'dd/mm/yyyy',
+                    language: 'es',
+                    weekStart: 1
+                }
+            );
+    
+            $('#core_bundle_blogbundle_post_project').select2({
+                placeholder: "{{ "project.choose" | trans }}",
+                allowClear: true
+            });
+            
+        });
+    </script>
+{% endblock %}
+ {% block js_after %}{% endblock %}
+    

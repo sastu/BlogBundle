@@ -1,0 +1,50 @@
+es: España
+mx: Mexico
+Bad credentials: El correo electrónico o la contraseña que ingresaste son incorrectos.
+January: Enero
+February: Febrero
+March: Marzo
+April: Abril
+May:  Mayo
+June: Junio
+July: Julio
+August: Augusto
+September: Septiembre
+October: Octubre
+November: Noviembre
+December: Deciembre
+
+blog:
+  singular: Blog
+  plural: Blogs
+  
+post:
+  singular: Publicación
+  plural: Blog del proyecto
+  title: Titulo
+  category: Categoría
+  categories: Categorías
+  slug: Slug
+  new: Nueva novedad
+  description: Descripción
+  createdAt: Fecha de creacion
+  updatedAt:  Fecha de actualización
+  published: Fecha de publicación
+  created: Se ha creado la publicación satisfactoriamente
+  edited: Se ha editado la publicación satisfactoriamente
+  deleted: Se ha eliminado la publicación satisfactoriamente
+  date: Publicado el
+  of: de
+
+comment:
+  singular: Comentario
+  plural: Comentarios
+  active: Activado
+  actor: Usuario
+  leave: ¡Deja un comentario!
+  header: Hay
+  header2: comentarios en esta entrada
+  new: Nuevo comentario
+  
+share:
+  message: Mensaje para compartir en redes sociales.

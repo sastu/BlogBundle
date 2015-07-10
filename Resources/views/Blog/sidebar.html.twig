@@ -1,0 +1,34 @@
+<div>
+    <!--<h3>Busca dentro del blog</h3>-->
+    <form name="search-form" method="POST" action="/blog/search">
+        <input name="search" class="search" type="text" placeholder="Buscar ..." />
+    </form>
+</div>
+
+<div class="tags">
+    <h3>#Tags</h3>
+    {% for category in categories %}
+        <a href="{{ path('core_blog_blog_tag', {'tag': category.slug }) }}"><div class="label large label-primary">#{{ category.name }} ({{ category.posts | length }})</div></a>
+ {% endfor %}     
+</div>
+
+<div class="twitter-user-timeline">
+    <a class="twitter-timeline" href="https://twitter.com/funds4science" data-widget-id="590255692021379073">
+        Tweets by @funds4science
+    </a>
+    <script>
+        window.twttr=(function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],t=window.twttr||{};if(d.getElementById(id))return t;js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);t._e=[];t.ready=function(f){t._e.push(f);};return t;}(document,"script","twitter-wjs"));</script>
+
+</div>
+
+<div class="networks">
+    <h3>Encuentranos en las redes</h3>
+    <div class="share-content" data="{{app.request.uri}}" style="display: inline-block">
+        {{shareUrl( app.request.uri, true )}}
+    </div>
+</div>
+
+<div class="history">
+    <h3>Archivo</h3>
+     {{blogHistory()}}
+</div>

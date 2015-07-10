@@ -1,0 +1,125 @@
+{% extends core['extended_layout'] ? core['extended_layout'] : 'CoreBundle:Base:base.layout.html.twig' %}
+
+{% block content %}
+    <div class="col-md-8">
+        <div class="row post-list">
+        
+                <div class="col-md-12">
+                    <article>
+                        <div class="post-content">
+                            {% if post.images|length > 0 %}
+                            {% set path = '/uploads/images/posts/'~post.id~'/'~post.images.first.path %}
+                            {% else %}
+                                {% set path = '/bundles/admin/img/default-no-image.png' %}
+                            {% endif %}
+                            <h3>{{ post.title }}</h3>
+                            <div class="date">{{ "post.date" | trans }} {{ post.createdAt | date ('d')}}  {{ "post.of" | trans }} {{ post.createdAt | date ('F') | trans }} {{ "post.of" | trans }} {{ post.createdAt | date ('Y')}} </div>
+                            <img style="float: left" width="245px" src="{{ path }}" />
+
+                            
+                            <p>{{ post.description | raw }}</p>
+                                
+                            <div class="container-author">
+                                
+                                <div class="border-profile-image col-xs-3">
+                                    <img style="border-radius: 59px;" width="100" src="{{ get_profile_image(post.actor) }}">
+                                </div>
+                             
+                                <div class="col-xs-7" >
+                                    <h4>Escrito por: {{ post.actor.fullName }}</h4>
+                                    <p >{{ post.actor.fullName }} a escrito {{ countPost(post.actor)}} en esta web. </p>
+                                    <p class="all-post"><a href="#">Ver todas </a>
+                                    
+                                </div>
+                            </div>
+                                    
+                            <div>
+                                <div class="tags">
+                                    {% for category in post.categories %}
+                                        <a href="{{ path('core_blog_blog_tag', {'tag': category.slug }) }}"><div class="label large label-primary">#{{ category.name }} ({{ category.posts | length }})</div></a>
+                                 {% endfor %}     
+                                </div>
+                            </div>
+                        </div>
+                        <div class="post-footer">
+                            <div>¡Compartelo! </div>
+                            <div data="{{core.server_base_url~path("core_blog_blog_show", { slug: post.slug})}}" class="share-content"  style="display: inline-block;">
+                                 {{shareUrl( path("core_blog_blog_show", { slug: post.slug} ) )}}
+                            </div>
+                        </div>
+                    </article>
+                                
+                    <div class="col-md-12 col-xs-12 comments">
+
+                        {% if post.comments | length > 0 %}
+                            <h1>{{ 'comment.header' | trans }} {{post.comments | length }} {{ 'comment.header2' | trans }} </h1>
+                            
+                            {% for comment in post.comments %}
+                                <div class="row">
+                                    <div class="col-md-2 col-xs-2">
+                                        {% if comment.actor.image is null %}
+                                            <img src="{{ asset('bundles/admin/img/default_profile_95.png') }}">
+                                        {% else %}
+                                            <img src="{{ asset('uploads/images/' ~ comment.actor.image) }}">
+                                        {% endif %}
+    
+                                    </div>
+                                    <div class="col-md-10 col-xs-10">
+                                        <div class="name">{{ comment.actor.fullName }}</div>
+                                        <div class="date">{{ "post.date" | trans }} {{ comment.createdAt | date ('d')}}  {{ "post.of" | trans }} {{ comment.createdAt | date ('F') | trans }} {{ "post.of" | trans }} {{ comment.createdAt | date ('Y')}} </div>
+                                        <p>{{ comment.comment }}</p>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                        
+                         <h1>{{ 'comment.leave' | trans }} </h1>
+                            
+                        {% include 'BlogBundle:Blog:_form_comment.html.twig' %}
+                    </div>
+                </div>
+         
+         </div>
+    </div>
+    <div class="col-md-4 post-sidebar">
+        {% include 'BlogBundle:Blog:sidebar.html.twig'%}
+    </div>
+    
+    
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $('.list > li a').click(function() {
+            $(this).parent().find('ul').eq(0).toggle();
+
+            if ($('#'+$(this).attr('id')+ " span.active").css('display') == 'inline-block'){
+                $('#'+$(this).attr('id')+ " span.active").css('display', 'none');
+                $('#'+$(this).attr('id')+ " span.pasive").css('display','inline-block');
+            }else{
+                $('#'+$(this).attr('id')+ " span.pasive").css('display', 'none');
+                $('#'+$(this).attr('id')+ " span.active").css('display','inline-block');
+            }
+        });
+        
+        $('.share-content').each(function( index ) {
+            var dir = $( this ).attr('data');
+            if(dir != ''){
+                //var url = dir.replace("http://", "");
+                var self = $(this);
+                $.ajax({
+                    type: 'GET',
+                    url: "/blog/share-counter?url="+dir
+                    //data: {'url': url}
+                }).done(function(result) {
+                    //console.log(result);
+                    //console.log(self.find('.tweet-counter>span.share-container-counter').html());
+                    self.find('.tweet-counter span.share-container-counter').text(result.tweet);
+                    self.find('.facebook-counter span.share-container-counter').text(result.facebook);
+                    self.find('.google-counter span.share-container-counter').text(result.google);
+                    self.find('.linked-counter span.share-container-counter').text(result.linkedin);
+                });
+            }
+          });
+    </script>
+{% endblock %}

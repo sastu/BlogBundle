@@ -1,0 +1,111 @@
+{% extends "AdminBundle:Base:layout.html.twig" %}
+
+{% block section %}postcomments{% endblock %}
+
+{% block content %}
+    <!-- BEGIN PAGE CONTAINER-->
+    <div class="container-fluid">
+        <!-- BEGIN PAGE HEADER-->
+        <div class="row-fluid">
+            <div class="span12">
+                <!-- BEGIN PAGE TITLE & BREADCRUMB-->
+                <h3 class="page-title">
+                    {{ "comment.plural" | trans }}
+                </h3>
+                <ul class="breadcrumb">
+                    <li><a href="{{ path('core_admin_default_index') }}"> <i class="ion-home"></i>  {{ "home" | trans }}</a></li>
+                    <li><a href="javascript:">{{ "post.plural" | trans }}</a></li>
+                    <li><a href="{{ path('core_blog_comment_index') }}">{{ "comment.singular" | trans }}</a></li>
+                </ul>
+                <!-- END PAGE TITLE & BREADCRUMB-->
+            </div>
+        </div>
+        <!-- END PAGE HEADER-->
+
+        <!-- BEGIN PAGE CONTENT-->
+        <div class="row-fluid">
+            <div class="span12">
+                <!-- TABLE PORTLET-->
+                <div class="portlet-body">
+                    <div class="clearfix">
+                        <div class="btn-group">
+                            <a href="{{ path('core_blog_comment_new') }}" class="btn green">
+                                {{ "add.new.2" | trans }} <i class="ion-plus"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <table class="table table-striped table-bordered table-hover" id="postcomments-table">
+                        <thead>
+                        <tr>
+                            <th >ID</th>
+                            <th>{{ "project.singular" | trans }}</th>
+                            <th>{{ "comment.actor" | trans }}</th>
+                            <th>{{ "comment.singular" | trans }}</th>
+                            <th>{{ "active" | trans }}</th>
+                            <th style="width:70px;"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- END TABLE PORTLET-->
+            </div>
+        </div>
+        <!-- END PAGE CONTENT-->
+    </div>
+    <!-- END PAGE CONTAINER-->
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+        var table_columns = [
+            { "mData": "id" },
+            { "mData": "projectName" },
+            {
+                "mData": function (source) {
+                    return source.actorName + ' ' + source.actorSurnames ;
+                }
+            },
+            {
+                "mData": function (source) {
+                    var string = source.comment;
+                    var shortText = jQuery.trim(string).substring(0, 80)
+                                        .split(" ").slice(0, -1).join(" ") + "...";
+                    return shortText;
+                }
+            },
+            {
+                "mData": "isActive",
+                "mRender": function(data) {
+                    var code = '';
+
+                    if (true == data) {
+                        code = '<span class="label label-success">{{ "yes" | trans }}</span>';
+                    } else {
+                        code = '<span class="label label-important">{{ "no" | trans }}</span>';
+                    }
+
+                    return code;
+                }
+            },
+            {
+                "mData": function(source) {
+                    return '<a href="' + source.id + '/edit" class="btn mini blue"><i class="ion-compose"></i> {{ "edit.singular" | trans }}</a> ';
+                }
+            }
+        ];
+
+        jQuery(document).ready(function() {
+
+            TableManaged.init(
+                '#postcomments-table',
+                '{{ url('core_blog_comment_listjson') }}',
+                [2],
+                table_columns,
+                '{{ url('core_admin_default_getdatatablesi18n', { language: app.request.locale }) }}');
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends "AdminBundle:Base:layout.html.twig" %}
+{% form_theme edit_form 'AdminBundle:Form:fields.html.twig' %}
+
+{% block section %}postcategories{% endblock %}
+
+{% block content %}
+    <!-- BEGIN PAGE CONTAINER-->
+    <div class="container-fluid">
+        <!-- BEGIN PAGE HEADER-->
+        <div class="row-fluid">
+            <div class="span12">
+                <!-- BEGIN PAGE TITLE & BREADCRUMB-->
+                <h3 class="page-title">
+                    {{ "edit.singular" | trans }} {{ entity.name }}
+                </h3>
+                <ul class="breadcrumb">
+                    <li><a href="{{ path('core_admin_default_index') }}"> <i class="ion-home"></i>  {{ "home" | trans }}</a></li>
+                    <li><a href="javascript:">{{ "blog.singular" | trans }}</a></li>
+                    <li><a href="{{ path('core_blog_category_index') }}">{{ "post.categories" | trans }}</a></li>
+                    <li><a href="{{ path('core_blog_category_edit', { id: entity.id }) }}">{{ "edit.singular" | trans }} </a></li>
+                </ul>
+                <!-- END PAGE TITLE & BREADCRUMB-->
+            </div>
+        </div>
+        <!-- END PAGE HEADER-->
+
+        <!-- BEGIN PAGE CONTENT-->
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="tabbable tabbable-custom boxless custom-border">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#info_tab" data-toggle="tab">{{ "information" | trans }}</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="info_tab">
+                            <div class="portlet box custom">
+                                <div class="portlet-body form">
+                                    <!-- BEGIN FORM-->
+                                    <form action="{{ path('core_blog_category_update', { id: entity.id }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal form-row-seperated">
+                                        {{ include('BlogBundle:Category:_form.html.twig', { form: edit_form }) }}
+
+                                        <input type="hidden" name="_method" value="PUT" />
+
+                                        <div class="form-actions">
+                                            <button type="submit" class="btn blue"><i class="ion-checkmark"></i> {{ "save" | trans }}</button>
+                                            <a href="{{ path('core_blog_category_show', { id: entity.id }) }}" class="btn">{{ "cancel.singular" | trans }}</a>
+                                            <button type="submit" class="btn red pull-right" id="delete-btn">{{ "delete" | trans }}</button>
+                                        </div>
+                                    </form>
+                                    <!-- END FORM-->
+                                </div>
+                            </div>
+
+                            <form id="delete-entity" action="{{ path('core_blog_category_delete', { id: entity.id }) }}" method="post">
+                                <input type="hidden" name="_method" value="DELETE" />
+                                {{ form_widget(delete_form) }}
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END PAGE CONTENT-->
+    </div>
+    <!-- END PAGE CONTAINER-->
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+        jQuery(document).ready(function() {
+            $('#delete-btn').on('click', function(e) {
+                e.preventDefault();
+
+                if (confirm('{{ "are.you.sure" | trans }}')) {
+                    $('#delete-entity').submit();
+                }
+            });
+        });
+    </script>
+{% endblock %}
